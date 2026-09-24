@@ -24,15 +24,31 @@ targets:
     default: true
     workspace:
       host: https://dbc-5b9d2cfb-bed6.cloud.databricks.com
+      root_path: /Workspace/Users/waghbk020801@gmail.com/dev
     variables:
       catalog: workspace
       schema: ${workspace.current_user.short_name}
+  
+  uat:
+    mode: production
+    workspace:
+      host: https://dbc-5b9d2cfb-bed6.cloud.databricks.com
+      # We explicitly deploy to /Workspace/Users/waghbk020801@gmail.com to make sure we only have a single copy.
+      root_path: /Workspace/Users/waghbk020801@gmail.com/uat
+    variables:
+      catalog: workspace
+      schema: uat
+    permissions:
+      - user_name: waghbk020801@gmail.com
+        level: CAN_MANAGE
+
+  
   prod:
     mode: production
     workspace:
       host: https://dbc-5b9d2cfb-bed6.cloud.databricks.com
       # We explicitly deploy to /Workspace/Users/waghbk020801@gmail.com to make sure we only have a single copy.
-      root_path: /Workspace/Users/waghbk020801@gmail.com/.bundle/${bundle.name}/${bundle.target}
+      root_path: /Workspace/Users/waghbk020801@gmail.com/prod
     variables:
       catalog: workspace
       schema: prod

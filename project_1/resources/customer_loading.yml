@@ -1,32 +1,33 @@
-# A sample job for project_1.
-
 resources:
   jobs:
-    sample_job:
-      name: sample_job
-
+    customer_loading:
+      name: customer_loading
       trigger:
-        # Run this job every day, exactly one day from the last run; see https://docs.databricks.com/api/workspace/jobs/create#trigger
+        pause_status: UNPAUSED
         periodic:
           interval: 1
           unit: DAYS
-
-      #email_notifications:
-      #  on_failure:
-      #    - your_email@example.com
-
+      tasks:
+        - task_key: customers
+          notebook_task:
+            notebook_path: /Repos/waghbk020801@gmail.com/databricks-first-proj/project_1/src/bronze_notebooks/01_bronze_customers
+            source: WORKSPACE
+        - task_key: customers_silver
+          depends_on:
+            - task_key: customers
+          notebook_task:
+            notebook_path: /Repos/waghbk020801@gmail.com/databricks-first-proj/project_1/src/silver_notebooks/03_silver_customers
+            source: WORKSPACE
+          environment_key: default
+      queue:
+        enabled: true
       parameters:
         - name: catalog
           default: ${var.catalog}
         - name: schema
           default: ${var.schema}
-
-      tasks:
-        - task_key: notebook_task
-          notebook_task:
-            notebook_path: ../src/sample_notebook.ipynb
-
       environments:
         - environment_key: default
           spec:
             environment_version: "5"
+      performance_target: PERFORMANCE_OPTIMIZED
